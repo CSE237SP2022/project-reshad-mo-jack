@@ -1,4 +1,4 @@
-##Simple Connect Four
+# Simple Connect Four
 
 Reshad
 Mo
