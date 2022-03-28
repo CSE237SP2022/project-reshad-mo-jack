@@ -1,3 +1,4 @@
+package main;
 public class ConnectFour {
     //0 no piece, player 1 is 1, player 2 is 2
     private int [][] board; 
