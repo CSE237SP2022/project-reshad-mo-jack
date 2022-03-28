@@ -28,16 +28,11 @@ public class ConnectFour {
         //after the move we check if the game has been won
     }
 
-<<<<<<< HEAD
-    public void playerNames() {
-
-=======
     public void playerNames(String[] args, String playerId) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter username for player " + playerId); 
         String name = scanner.nextLine();   
         System.out.println("Username for " playerID + " is: " + name);        
->>>>>>> playernames
     }
 
     public boolean validMove(int col) {
