@@ -1,5 +1,14 @@
 package test;
 
-public class ConnectFourTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class ConnectFourTest {
+
+	@Test
+	void test() {
+		fail("Not yet implemented");
+	}
 
 }
