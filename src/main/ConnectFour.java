@@ -1,12 +1,12 @@
 package main;
 public class ConnectFour {
     //0 no piece, player 1 is 1, player 2 is 2
-    private int [][] board; 
-    private String player1;
-    private String player2;
+    private static int [][] board; 
+    private static String player1;
+    private static String player2;
 
     public static void main(String[] args) {
-        this.board = new int [8][8];
+        board = new int [8][8];
 
 
         //input player names
@@ -30,12 +30,13 @@ public class ConnectFour {
     }
 
     public boolean validMove(int col) {
-       
+       return true;
     }
 
     public int gameWon() {
         //do this after a player does a move
         //only check if that last move is a winning move
+    	return 0;
     }
 
 
