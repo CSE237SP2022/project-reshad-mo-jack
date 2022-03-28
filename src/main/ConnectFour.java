@@ -1,4 +1,7 @@
 package main;
+
+import java.util.Scanner;
+
 public class ConnectFour {
     //0 no piece, player 1 is 1, player 2 is 2
     private static int [][] board; 
@@ -25,8 +28,16 @@ public class ConnectFour {
         //after the move we check if the game has been won
     }
 
+<<<<<<< HEAD
     public void playerNames() {
 
+=======
+    public void playerNames(String[] args, String playerId) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter username for player " + playerId); 
+        String name = scanner.nextLine();   
+        System.out.println("Username for " playerID + " is: " + name);        
+>>>>>>> playernames
     }
 
     public boolean validMove(int col) {
