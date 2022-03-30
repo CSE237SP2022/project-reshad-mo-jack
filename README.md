@@ -1,8 +1,8 @@
 # Simple Connect Four
 
-Reshad
+Reshad 464021
 
-Mo
+Mo 467695
 
 Jack Zhai 475411
 
