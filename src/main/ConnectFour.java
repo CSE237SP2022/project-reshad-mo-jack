@@ -10,12 +10,12 @@ public class ConnectFour {
 
     public static void main(String[] args) {
         board = new int [8][8];
-        printBoard();
 
         //input player names
         //enter player1 name
         //enter player2 name
-
+        ConnectFour game = new ConnectFour();
+        game.playerNames("1");
         //no grid size yet, start with 8 cols, 8 rows
         //later on, give options
 
@@ -31,18 +31,19 @@ public class ConnectFour {
     //playerID is a string, either '1' or '2'
     public void playerNames(String playerID) { 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter username for player " + playerID);  
-        if (playerID.equals('1')) {
-            this.player1 = = scanner.nextLine();
+        System.out.println("Enter username for player " + playerID);
+        String name = scanner.nextLine();
+        if (playerID.equals("1")) {
+            player1 = name;
         } else {
-            this.player2 = = scanner.nextLine();
+            player2 = name;
         }
         System.out.println("Player " + playerID + ": " + name);    
         scanner.close();
     }
 
-    public String getPlayerNames() {
-        return {player1, player2}
+    public String[] getPlayerNames() {
+        return new String [] {player1, player2};
     }
 
     public boolean validMove(int col) {
@@ -55,9 +56,7 @@ public class ConnectFour {
     	return 0;
     }
 
-    public static void printBoard() {
-    	int rows = board.length;
-    	int cols = board[0].length;
+    public void printBoard() {
     	String frontSpacing = "   ";
 
     	System.out.println();
@@ -66,7 +65,7 @@ public class ConnectFour {
     	printColumnLabel();
     }
     
-    public static void printHorizontalLine(String frontSpacing) {
+    public void printHorizontalLine(String frontSpacing) {
     	int rows = board.length;
     	String cellBorderTopOrBottom = "--";
     	String cellBorderTopOrBottomEdge = "-";
@@ -79,7 +78,7 @@ public class ConnectFour {
     	System.out.println();
     }
     
-    public static void printRow(String frontSpacing) {
+    public void printRow(String frontSpacing) {
     	int rows = board.length;
     	int cols = board[0].length;
     	String spacingAfterLabel = "  "; 
@@ -95,7 +94,7 @@ public class ConnectFour {
     	}
     }
     
-    public static void printColumnLabel() {
+    public void printColumnLabel() {
     	int cols = board[0].length;
     	String frontSpacing = "    ";
     	String spacingBetweenColumnLabels = " ";
