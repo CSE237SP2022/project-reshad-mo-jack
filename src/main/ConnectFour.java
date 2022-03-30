@@ -47,7 +47,9 @@ public class ConnectFour {
     }
 
     public boolean validMove(int col) {
-       return true;
+        if (col<=0 || col>8) return false
+        if (this.board[col+1][7]!=0) return false;
+        return true;
     }
 
     public int gameWon() {
