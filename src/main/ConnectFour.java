@@ -10,7 +10,7 @@ public class ConnectFour {
 
     public static void main(String[] args) {
         board = new int [8][8];
-
+        printBoard();
 
         //input player names
         //enter player1 name
@@ -29,9 +29,9 @@ public class ConnectFour {
     }
 
     //playerID is a string, either '1' or '2'
-    public void playerNames(String playerId) { 
+    public void playerNames(String playerID) { 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter username for player " + playerId);  
+        System.out.println("Enter username for player " + playerID);  
         if (playerID.equals('1')) {
             this.player1 = = scanner.nextLine();
         } else {
@@ -55,9 +55,57 @@ public class ConnectFour {
     	return 0;
     }
 
+    public static void printBoard() {
+    	int rows = board.length;
+    	int cols = board[0].length;
+    	String frontSpacing = "   ";
 
-    public void printBoard() {
+    	System.out.println();
+    	printHorizontalLine(frontSpacing);
+    	printRow(frontSpacing);
+    	printColumnLabel();
+    }
+    
+    public static void printHorizontalLine(String frontSpacing) {
+    	int rows = board.length;
+    	String cellBorderTopOrBottom = "--";
+    	String cellBorderTopOrBottomEdge = "-";
+    	
+    	System.out.print(frontSpacing);
+    	System.out.print(cellBorderTopOrBottomEdge);
+    	for(int r=rows-1; r>=0; r--) {
+        	System.out.print(cellBorderTopOrBottom);
+    	}
+    	System.out.println();
+    }
+    
+    public static void printRow(String frontSpacing) {
+    	int rows = board.length;
+    	int cols = board[0].length;
+    	String spacingAfterLabel = "  "; 
+    	String cellBorderSide = "|";
+    	
+    	for(int r=rows-1; r>=0; r--) {  
+    		System.out.print((r+1) + spacingAfterLabel + cellBorderSide);
+    		for(int c=cols-1; c>=0; c--) {
+    			System.out.print(board[r][c] + cellBorderSide);
+    		}
+    		System.out.println();
+    		printHorizontalLine(frontSpacing);
+    	}
+    }
+    
+    public static void printColumnLabel() {
+    	int cols = board[0].length;
+    	String frontSpacing = "    ";
+    	String spacingBetweenColumnLabels = " ";
 
+    	System.out.print(frontSpacing);
+    	for(int c=1; c<=cols; c++) {
+    		System.out.print(c + spacingBetweenColumnLabels);
+    	}
+    	
+    	System.out.println();
     }
 
 
