@@ -1,5 +1,6 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -13,16 +14,16 @@ import main.ConnectFour;
 public class ConnectFourTest {
   @Test
   void addPieceBelowBoard() {
-      ConnectFour board = new Board();
-      boolean wasValid = Board.validMove(0);
-      assertEquals(wasValid,False);
+      ConnectFour game = new ConnectFour();
+      boolean wasValid = game.validMove(0);
+      assertEquals(wasValid, false);
   }
 
   @Test
   void addPiecePastBoard() {
-      ConnectFour board = new Board();
-      boolean wasValid = Board.validMove(9);
-      assertEquals(wasValid,False);
+      ConnectFour game = new ConnectFour();
+      boolean wasValid = game.validMove(9);
+      assertEquals(wasValid, false);
   }
 
   @Test
