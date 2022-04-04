@@ -11,11 +11,12 @@ public class ConnectFour {
     public static void main(String[] args) {
         board = new int [8][8];
 
+        ConnectFour game = new ConnectFour();
         //input player names
         //enter player1 name
-        //enter player2 name
-        ConnectFour game = new ConnectFour();
         game.playerNames("1");
+        //enter player2 name
+        game.playerNames("2");
         //no grid size yet, start with 8 cols, 8 rows
         //later on, give options
 
@@ -26,20 +27,22 @@ public class ConnectFour {
         //when a player makes a move, we determine if move is valid, we check size of that column<8
         
         //after the move we check if the game has been won
+        System.out.println("Game end");
     }
 
     //playerID is a string, either '1' or '2'
     public void playerNames(String playerID) { 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter username for player " + playerID);
-        String name = scanner.nextLine();
-        if (playerID.equals("1")) {
-            player1 = name;
-        } else {
-            player2 = name;
-        }
-        System.out.println("Player " + playerID + ": " + name);    
-        scanner.close();
+        if (scanner.hasNextLine()) {
+        	 String name = scanner.nextLine();
+        	 if (playerID.equals("1")) {
+                 player1 = name;
+             } else {
+                 player2 = name;
+             }
+             System.out.println("Player " + playerID + ": " + name);   
+        } 
     }
 
     public String[] getPlayerNames() {
