@@ -3,56 +3,11 @@ package main;
 import java.util.Scanner;
 
 public class ConnectFour {
-	// 0 no piece, player 1 is 1, player 2 is 2
 	public char[][] board;
 	public Scanner scanner;
 	public int currentTurnPlayer;
 	public String[] players;
 	public char[] playerPieces;
-
-    public boolean gameWon() { //do this after a player does a move
-        //loop through all unit on board
-        int rowSize = board.length;
-    	int colSize = board[0].length;
-        for(int row = 0; row < rowSize; row ++) {
-            for(int col = 0; col < colSize; col ++) {
-                //detect if horizontal 4
-                if (board[row][col] != 0 && col + 1 < colSize && col + 2 < colSize && col + 3 < colSize) {
-                    if (board[row][col] == board[row][col + 1] && board[row][col] == board[row][col + 2] && board[row][col] == board[row][col + 3]) {
-                        return true;
-                    } 
-                }
-                //detect if vertical 4
-                if (board[row][col] != 0 && row + 1 < rowSize && row + 2 < rowSize && row + 3 < rowSize) {
-                    if (board[row][col] == board[row + 1][col] && board[row][col] == board[row + 2][col] && board[row][col] == board[row + 3][col]) {
-                        return true;
-                    } 
-                }
-                //detect if diagnol 4
-                if (board[row][col] != 0 && row + 1 < rowSize && row + 2 < rowSize && row + 3 < rowSize && col + 1 < colSize && col + 2 < colSize && col + 3 < colSize) {
-                    if (board[row][col] == board[row + 1][col + 1] && board[row][col] == board[row + 2][col + 2] && board[row][col] == board[row + 3][col + 3]) {
-                        return true;
-                    } 
-                }
-                if (board[row][col] != 0 && row + 1 < rowSize && row + 2 < rowSize && row + 3 < rowSize && col - 1 >= 0 && col - 2 >= 0 && col - 3 >= 0) {
-                    if (board[row][col] == board[row + 1][col - 1] && board[row][col] == board[row + 2][col - 2] && board[row][col] == board[row + 3][col - 3]) {
-                        return true;
-                    } 
-                }
-            }
-        }
-    	return false;
-    }
-
-    public boolean gameTie() {
-        int rowSize = board.length;
-        for(int row = 0; row < rowSize; row ++) {
-            if (board[row][7] != 0) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 	public static void main(String[] args) {
 		char[][] board = new char[8][8];
@@ -78,6 +33,12 @@ public class ConnectFour {
 			addPieces(col);
 			changeTurns();
 			printGame();
+			if(gameWon()) {
+				break;
+			}
+			if(gameTie()) {
+				break;
+			}
 		}
 	}
 
@@ -95,7 +56,6 @@ public class ConnectFour {
 			players[playerNumber] = inputValidPlayerName();
 		}
 	}
-	
 
 	public String inputValidPlayerName() {
 		String playerName = "";
@@ -112,7 +72,7 @@ public class ConnectFour {
 	public String[] getPlayerNames() {
 		return players;
 	}
-	
+
 	public int inputValidColumn() {
 		int col = 0;
 		int columns = getNumCols();
@@ -122,7 +82,7 @@ public class ConnectFour {
 				col = scanner.nextInt();
 			} catch (Exception e) {
 				System.out.println("Incorrect input: not an integer or valid move");
-	            scanner.nextLine();
+				scanner.nextLine();
 			}
 
 		}
@@ -133,9 +93,9 @@ public class ConnectFour {
 		int row = getEmptyRow(col);
 		board[col][row] = getCurrentPlayerPiece();
 	}
-	
+
 	public char getCurrentPlayerPiece() {
-		 return playerPieces[currentTurnPlayer];
+		return playerPieces[currentTurnPlayer];
 	}
 
 	public int getEmptyRow(int col) {
@@ -147,16 +107,133 @@ public class ConnectFour {
 		return row;
 	}
 
-	public int gameWon() {
-		return 0;
-	}
-
 	public void changeTurns() {
 		if (currentTurnPlayer == 0) {
 			currentTurnPlayer = 1;
 		} else {
 			currentTurnPlayer = 0;
 		}
+	}
+
+	public boolean gameWon() { 		
+		if(isVerticalWin()) {
+			return true;
+		};
+		if(isHorizontalWin()) {
+			return true;
+		}
+		if(isDiagonalWin()) {
+			return true;
+		}
+	
+		return false;
+	}
+	
+	public boolean isVerticalWin() {
+		int rows = getNumRows();
+		int cols = getNumCols();
+		
+		for (int row=0; row<rows-3; row++) {
+			for(int col = 0; col < cols; col++) {
+				char piece = board[col][row];
+				
+				if (piece == '\0') {
+					continue;
+				}
+				
+				if (piece == board[col][row + 1] && piece == board[col][row + 2]
+						&& piece == board[col][row + 3]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isHorizontalWin() {
+		int rows = getNumRows();
+		int cols = getNumCols();
+
+		for(int col = 0; col < cols-3; col++) {
+			for (int row=0; row<rows; row++) {
+				char piece = board[col][row];
+				
+				if (piece == '\0') {
+					continue;
+				}
+				
+				if (piece == board[col + 1][row] && piece == board[col + 2][row]
+						&& piece == board[col + 3][row]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isDiagonalWin() {
+		if(checkBottomLeftTopRightDiagonal()) {
+			return true;
+		}
+		
+		if(checkTopLeftBottomRightDiagonal()) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean checkBottomLeftTopRightDiagonal() {
+		int rows = getNumRows();
+		int cols = getNumCols();
+		
+		for(int col = 0; col < cols-3; col++) {
+			for (int row=0; row<rows-3; row++) {
+				char piece = board[col][row];
+				
+				if (piece == '\0') {
+					continue;
+				}
+				
+				if (piece == board[col + 1][row + 1] && piece == board[col + 2][row + 2]
+						&& piece == board[col + 3][row + 3]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean checkTopLeftBottomRightDiagonal() {
+		int rows = getNumRows();
+		int cols = getNumCols();
+		
+		for(int col = cols - 1; col > 2; col--) {
+			for (int row=0; row<rows-3; row++) {
+				char piece = board[col][row];
+				
+				if (piece == '\0') {
+					continue;
+				}
+				
+				if (piece == board[col - 1][row + 1] && piece == board[col - 2][row + 2]
+						&& piece == board[col - 3][row + 3]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean gameTie() {
+		int cols = getNumCols();
+		int rows = getNumRows() - 1;
+		for (int col = 0; col < cols; col++) {
+			if (board[col][rows] == '\0') {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void printGame() {
@@ -195,7 +272,7 @@ public class ConnectFour {
 		for (int r = rows - 1; r >= 0; r--) {
 			System.out.print((r + 1) + spacingAfterLabel + cellBorderSide);
 			for (int c = 0; c < cols; c++) {
-				if(board[c][r] != '\0') {
+				if (board[c][r] != '\0') {
 					System.out.print(board[c][r] + cellBorderSide);
 				} else {
 					System.out.print(' ' + cellBorderSide);
