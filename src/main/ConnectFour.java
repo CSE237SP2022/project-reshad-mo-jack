@@ -10,6 +10,50 @@ public class ConnectFour {
 	public String[] players;
 	public char[] playerPieces;
 
+    public boolean gameWon() { //do this after a player does a move
+        //loop through all unit on board
+        int rowSize = board.length;
+    	int colSize = board[0].length;
+        for(int row = 0; row < rowSize; row ++) {
+            for(int col = 0; col < colSize; col ++) {
+                //detect if horizontal 4
+                if (board[row][col] != 0 && col + 1 < colSize && col + 2 < colSize && col + 3 < colSize) {
+                    if (board[row][col] == board[row][col + 1] && board[row][col] == board[row][col + 2] && board[row][col] == board[row][col + 3]) {
+                        return true;
+                    } 
+                }
+                //detect if vertical 4
+                if (board[row][col] != 0 && row + 1 < rowSize && row + 2 < rowSize && row + 3 < rowSize) {
+                    if (board[row][col] == board[row + 1][col] && board[row][col] == board[row + 2][col] && board[row][col] == board[row + 3][col]) {
+                        return true;
+                    } 
+                }
+                //detect if diagnol 4
+                if (board[row][col] != 0 && row + 1 < rowSize && row + 2 < rowSize && row + 3 < rowSize && col + 1 < colSize && col + 2 < colSize && col + 3 < colSize) {
+                    if (board[row][col] == board[row + 1][col + 1] && board[row][col] == board[row + 2][col + 2] && board[row][col] == board[row + 3][col + 3]) {
+                        return true;
+                    } 
+                }
+                if (board[row][col] != 0 && row + 1 < rowSize && row + 2 < rowSize && row + 3 < rowSize && col - 1 >= 0 && col - 2 >= 0 && col - 3 >= 0) {
+                    if (board[row][col] == board[row + 1][col - 1] && board[row][col] == board[row + 2][col - 2] && board[row][col] == board[row + 3][col - 3]) {
+                        return true;
+                    } 
+                }
+            }
+        }
+    	return false;
+    }
+
+    public boolean gameTie() {
+        int rowSize = board.length;
+        for(int row = 0; row < rowSize; row ++) {
+            if (board[row][7] != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 	public static void main(String[] args) {
 		char[][] board = new char[8][8];
 		Scanner scanner = new Scanner(System.in);

@@ -10,13 +10,13 @@ import java.util.Scanner;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import main.ConnectFour;
 
 public class ConnectFourTest {
 	private ConnectFour game;
 
-	@Before
 	public void setup() {
 		char[][] board = new char[8][8];
 		Scanner scanner = new Scanner(System.in);
@@ -163,8 +163,7 @@ public class ConnectFourTest {
 	public void testChangeTurnsShouldFail() {
 		game.changeTurns();
 		assertNotEquals(0, game.currentTurnPlayer);
-	}
-	
+
 	@Test
 	public void testChangeTurnsMultiple() {
 		for(int i=0; i<2; i++) {
@@ -173,8 +172,7 @@ public class ConnectFourTest {
 
 		assertEquals(0, game.currentTurnPlayer);
 	}
-	
-	@Test
+
 	public void testChangeTurnsMultipleShouldFail() {
 		for(int i=0; i<3; i++) {
 			game.changeTurns();
@@ -182,4 +180,48 @@ public class ConnectFourTest {
 		assertNotEquals(0, game.currentTurnPlayer);
 	}
 
+	@Test
+	void horizonalWin() {
+        game.board[3][0] = 1;
+        game.board[2][0] = 1;
+        game.board[1][0] = 1;
+        game.board[0][0] = 1;
+		assertTrue(game.gameWon());
+	}
+
+	@Test
+	void verticalWin() {
+		game.board[0][4] = 1;
+        game.board[0][3] = 1;
+        game.board[0][2] = 1;
+        game.board[0][1] = 1;
+		assertTrue(game.gameWon());
+	}
+
+	@Test
+	void diagnolWin() {
+		game.board[4][4] = 1;
+        game.board[5][3] = 1;
+        game.board[6][2] = 1;
+        game.board[7][1] = 1;
+		assertTrue(game.gameWon());
+	}
+
+	@Test
+	void diagnolWin2() {
+		game.board[0][0] = 1;
+        game.board[2][2] = 1;
+        game.board[3][3] = 1;
+        game.board[1][1] = 1;
+		assertTrue(game.gameWon());
+	}
+
+	@Test
+	void tied() {
+		int colSize = game.board[0].length;
+        for(int col = 0; col < colSize; col ++) {
+            game.board[7][col] = 1;
+        }
+		assertTrue(game.gameTie());
+	}
 }
