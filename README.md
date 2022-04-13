@@ -28,3 +28,21 @@ Edge cases might not behave properly.
 ## What commands are needed to compile and run your code from the command line (or better yet, provide a script that people can use to run your program!)
 
 
+# Iteration 2
+
+
+## What user stories were completed this iteration?
+
+Game can be played by two players in a 8x8 board.
+
+## What user stories do you intend to complete next iteration?
+
+Better displaying features on which player won or tied the game. Will add more features in custom game as well.
+
+## Is there anything that you implemented but doesn't currently work?
+
+Some extreme edge cases might not behave properly. Col and row might be used intertwinedly. 
+
+## What commands are needed to compile and run your code from the command line (or better yet, provide a script that people can use to run your program!)
+
+Run the script './run.sh' from command line
