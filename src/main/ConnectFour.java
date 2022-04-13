@@ -3,50 +3,12 @@ package main;
 import java.util.Scanner;
 
 public class ConnectFour {
-    //0 no piece, player 1 is 1, player 2 is 2
-    public int [][] board; 
-    private String player1;
-    private String player2;
-    public Scanner scanner;
-
-    public static void main(String[] args) {
-    	int[][] board = new int[8][8];
-    	Scanner scanner = new Scanner(System.in);
-        ConnectFour game = new ConnectFour(board, scanner);
-        game.playerNames(scanner, "1");
-        game.playerNames(scanner, "2");
-        game.printBoard();
-    }
-    
-    public ConnectFour(int[][] board, Scanner scanner) {
-    	this.board = board;
-    	this.scanner = scanner;
-    }
-
-    //playerID is a string, either '1' or '2'
-    public void playerNames(Scanner scanner, String playerID) { 
-        System.out.println("Enter username for player " + playerID);
-        if (this.scanner.hasNextLine()) {
-        	 String name = this.scanner.nextLine();
-        	 if (playerID.equals("1")) {
-                 player1 = name;
-             } else {
-                 player2 = name;
-             }
-             System.out.println("Player " + playerID + ": " + name);   
-        } 
-    }
-
-    public String[] getPlayerNames() {
-        return new String [] {player1, player2};
-    }
-
-    public boolean validMove(int col) { 
-        // col must be between 0 and 7 inclusive, for a 8x8 board
-        if (col<0 || col>8) return false;
-        if (board[col][7]!=0) return false;
-        return true;
-    }
+	// 0 no piece, player 1 is 1, player 2 is 2
+	public char[][] board;
+	public Scanner scanner;
+	public int currentTurnPlayer;
+	public String[] players;
+	public char[] playerPieces;
 
     public boolean gameWon() { //do this after a player does a move
         //loop through all unit on board
@@ -92,56 +54,169 @@ public class ConnectFour {
         return false;
     }
 
-    public void printBoard() {
-    	String frontSpacing = "   ";
+	public static void main(String[] args) {
+		char[][] board = new char[8][8];
+		Scanner scanner = new Scanner(System.in);
+		ConnectFour game = new ConnectFour(board, scanner);
+		game.play();
+	}
 
-    	System.out.println();
-    	printHorizontalLine(frontSpacing);
-    	printRow(frontSpacing);
-    	printColumnLabel();
-    }
-    
-    public void printHorizontalLine(String frontSpacing) {
-    	int rows = board.length;
-    	String cellBorderTopOrBottom = "--";
-    	String cellBorderTopOrBottomEdge = "-";
-    	
-    	System.out.print(frontSpacing);
-    	System.out.print(cellBorderTopOrBottomEdge);
-    	for(int r=rows-1; r>=0; r--) {
-        	System.out.print(cellBorderTopOrBottom);
-    	}
-    	System.out.println();
-    }
-    
-    public void printRow(String frontSpacing) {
-    	int rows = board.length;
-    	int cols = board[0].length;
-    	String spacingAfterLabel = "  "; 
-    	String cellBorderSide = "|";
-    	
-    	for(int r=rows-1; r>=0; r--) {  
-    		System.out.print((r+1) + spacingAfterLabel + cellBorderSide);
-    		for(int c=cols-1; c>=0; c--) {
-    			System.out.print(board[r][c] + cellBorderSide);
-    		}
-    		System.out.println();
-    		printHorizontalLine(frontSpacing);
-    	}
-    }
-    
-    public void printColumnLabel() {
-    	int cols = board[0].length;
-    	String frontSpacing = "    ";
-    	String spacingBetweenColumnLabels = " ";
+	public ConnectFour(char[][] board, Scanner scanner) {
+		this.board = board;
+		this.scanner = scanner;
+		this.currentTurnPlayer = 0;
+		this.players = new String[2];
+		this.playerPieces = new char[] { 'X', 'O' };
+	}
 
-    	System.out.print(frontSpacing);
-    	for(int c=1; c<=cols; c++) {
-    		System.out.print(c + spacingBetweenColumnLabels);
-    	}
-    	
-    	System.out.println();
-    }
+	public void play() {
+		setPlayerNames();
+		printGame();
 
+		while (true) {
+			int col = inputValidColumn();
+			addPieces(col);
+			changeTurns();
+			printGame();
+		}
+	}
+
+	public int getNumRows() {
+		return board[0].length;
+	}
+
+	public int getNumCols() {
+		return board.length;
+	}
+
+	public void setPlayerNames() {
+		for (int playerNumber = 0; playerNumber < 2; playerNumber++) {
+			System.out.println("Enter username for player " + (playerNumber + 1));
+			players[playerNumber] = inputValidPlayerName();
+		}
+	}
+	
+
+	public String inputValidPlayerName() {
+		String playerName = "";
+		while (playerName.trim().length() == 0) {
+			if (scanner.hasNextLine()) {
+				playerName = this.scanner.nextLine();
+			} else {
+				System.out.println("Please enter non empty string for player name");
+			}
+		}
+		return playerName;
+	}
+
+	public String[] getPlayerNames() {
+		return players;
+	}
+	
+	public int inputValidColumn() {
+		int col = 0;
+		int columns = getNumCols();
+		while ((col < 1) || (col > 8) || (board[col - 1][7] != '\0')) {
+			try {
+				System.out.println("Enter valid integer column between 1 and " + columns + " to place piece");
+				col = scanner.nextInt();
+			} catch (Exception e) {
+				System.out.println("Incorrect input: not an integer or valid move");
+	            scanner.nextLine();
+			}
+
+		}
+		return col - 1;
+	}
+
+	public void addPieces(int col) {
+		int row = getEmptyRow(col);
+		board[col][row] = getCurrentPlayerPiece();
+	}
+	
+	public char getCurrentPlayerPiece() {
+		 return playerPieces[currentTurnPlayer];
+	}
+
+	public int getEmptyRow(int col) {
+		char[] column = board[col];
+		int row = 0;
+		while (column[row] != '\0') {
+			row += 1;
+		}
+		return row;
+	}
+
+	public int gameWon() {
+		return 0;
+	}
+
+	public void changeTurns() {
+		if (currentTurnPlayer == 0) {
+			currentTurnPlayer = 1;
+		} else {
+			currentTurnPlayer = 0;
+		}
+	}
+
+	public void printGame() {
+		System.out.println("Current Player: " + players[currentTurnPlayer]);
+		printBoard();
+	}
+
+	public void printBoard() {
+		String frontSpacing = "   ";
+
+		System.out.println();
+		printHorizontalLine(frontSpacing);
+		printRow(frontSpacing);
+		printColumnLabel();
+	}
+
+	public void printHorizontalLine(String frontSpacing) {
+		int rows = getNumRows();
+		String cellBorderTopOrBottom = "--";
+		String cellBorderTopOrBottomEdge = "-";
+
+		System.out.print(frontSpacing);
+		System.out.print(cellBorderTopOrBottomEdge);
+		for (int r = rows - 1; r >= 0; r--) {
+			System.out.print(cellBorderTopOrBottom);
+		}
+		System.out.println();
+	}
+
+	public void printRow(String frontSpacing) {
+		int rows = getNumRows();
+		int cols = getNumCols();
+		String spacingAfterLabel = "  ";
+		String cellBorderSide = "|";
+
+		for (int r = rows - 1; r >= 0; r--) {
+			System.out.print((r + 1) + spacingAfterLabel + cellBorderSide);
+			for (int c = 0; c < cols; c++) {
+				if(board[c][r] != '\0') {
+					System.out.print(board[c][r] + cellBorderSide);
+				} else {
+					System.out.print(' ' + cellBorderSide);
+				}
+			}
+			System.out.println();
+			printHorizontalLine(frontSpacing);
+		}
+	}
+
+	public void printColumnLabel() {
+		int cols = getNumCols();
+		String frontSpacing = "    ";
+		String spacingBetweenColumnLabels = " ";
+
+		System.out.print(frontSpacing);
+		for (int c = 1; c <= cols; c++) {
+			System.out.print(c + spacingBetweenColumnLabels);
+		}
+
+		System.out.println();
+	}
 
 }
