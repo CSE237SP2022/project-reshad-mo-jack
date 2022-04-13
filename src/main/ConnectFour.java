@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class ConnectFour {
     //0 no piece, player 1 is 1, player 2 is 2
-    private int [][] board; 
+    public int [][] board; 
     private String player1;
     private String player2;
     public Scanner scanner;
@@ -41,16 +41,55 @@ public class ConnectFour {
         return new String [] {player1, player2};
     }
 
-    public boolean validMove(int col) {
-        if (col<=0 || col>8) return false;
-        if (board[col+1][7]!=0) return false;
+    public boolean validMove(int col) { 
+        // col must be between 0 and 7 inclusive, for a 8x8 board
+        if (col<0 || col>8) return false;
+        if (board[col][7]!=0) return false;
         return true;
     }
 
-    public int gameWon() {
-        //do this after a player does a move
-        //only check if that last move is a winning move
-    	return 0;
+    public boolean gameWon() { //do this after a player does a move
+        //loop through all unit on board
+        int rowSize = board.length;
+    	int colSize = board[0].length;
+        for(int row = 0; row < rowSize; row ++) {
+            for(int col = 0; col < colSize; col ++) {
+                //detect if horizontal 4
+                if (board[row][col] != 0 && col + 1 < colSize && col + 2 < colSize && col + 3 < colSize) {
+                    if (board[row][col] == board[row][col + 1] && board[row][col] == board[row][col + 2] && board[row][col] == board[row][col + 3]) {
+                        return true;
+                    } 
+                }
+                //detect if vertical 4
+                if (board[row][col] != 0 && row + 1 < rowSize && row + 2 < rowSize && row + 3 < rowSize) {
+                    if (board[row][col] == board[row + 1][col] && board[row][col] == board[row + 2][col] && board[row][col] == board[row + 3][col]) {
+                        return true;
+                    } 
+                }
+                //detect if diagnol 4
+                if (board[row][col] != 0 && row + 1 < rowSize && row + 2 < rowSize && row + 3 < rowSize && col + 1 < colSize && col + 2 < colSize && col + 3 < colSize) {
+                    if (board[row][col] == board[row + 1][col + 1] && board[row][col] == board[row + 2][col + 2] && board[row][col] == board[row + 3][col + 3]) {
+                        return true;
+                    } 
+                }
+                if (board[row][col] != 0 && row + 1 < rowSize && row + 2 < rowSize && row + 3 < rowSize && col - 1 >= 0 && col - 2 >= 0 && col - 3 >= 0) {
+                    if (board[row][col] == board[row + 1][col - 1] && board[row][col] == board[row + 2][col - 2] && board[row][col] == board[row + 3][col - 3]) {
+                        return true;
+                    } 
+                }
+            }
+        }
+    	return false;
+    }
+
+    public boolean gameTie() {
+        int rowSize = board.length;
+        for(int row = 0; row < rowSize; row ++) {
+            if (board[row][7] != 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void printBoard() {
