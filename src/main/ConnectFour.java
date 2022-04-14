@@ -8,6 +8,7 @@ public class ConnectFour {
 	public int currentTurnPlayer;
 	public String[] players;
 	public char[] playerPieces;
+	public boolean tie;
 
 	public static void main(String[] args) {
 		char[][] board = new char[8][8];
@@ -22,6 +23,7 @@ public class ConnectFour {
 		this.currentTurnPlayer = 0;
 		this.players = new String[2];
 		this.playerPieces = new char[] { 'X', 'O' };
+		this.tie = false;
 	}
 
 	public void play() {
@@ -33,13 +35,12 @@ public class ConnectFour {
 			addPieces(col);
 			changeTurns();
 			printGame();
-			if(gameWon()) {
-				break;
-			}
-			if(gameTie()) {
+			tie = gameTie();
+			if(gameWon() || tie) {
 				break;
 			}
 		}
+		printGameEndStatus();
 	}
 
 	public int getNumRows() {
@@ -294,6 +295,11 @@ public class ConnectFour {
 		}
 
 		System.out.println();
+	}
+
+	public void printGameEndStatus() {
+		if(tie) System.out.println("The game was a tie!");
+		else System.out.println("Congrats! " + (players[1-currentTurnPlayer]) + " won the game.");
 	}
 
 }
