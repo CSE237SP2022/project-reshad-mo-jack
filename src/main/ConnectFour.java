@@ -11,13 +11,13 @@ public class ConnectFour {
 	public boolean tie;
 
 	public static void main(String[] args) {
-		char[][] board = new char[8][8];
 		Scanner scanner = new Scanner(System.in);
+		char[][] board = new char[8][8];
 		ConnectFour game = new ConnectFour(board, scanner);
 		game.play();
 	}
 
-	public ConnectFour(char[][] board, Scanner scanner) {
+	public ConnectFour(char [][] board, Scanner scanner) {
 		this.board = board;
 		this.scanner = scanner;
 		this.currentTurnPlayer = 0;
@@ -28,8 +28,8 @@ public class ConnectFour {
 
 	public void play() {
 		setPlayerNames();
+		setBoardDimensions();
 		printGame();
-
 		while (true) {
 			int col = inputValidColumn();
 			addPieces(col);
@@ -49,6 +49,22 @@ public class ConnectFour {
 
 	public int getNumCols() {
 		return board.length;
+	}
+
+	public void setBoardDimensions() {
+		System.out.println("Enter dimensions for board");
+		int dimensions = 0;
+		while ((dimensions < 4) || (dimensions > 10)) {
+			try {
+				System.out.println("Enter valid integer column between 4 and 10 for board dimensions");
+				dimensions = scanner.nextInt();
+			} catch (Exception e) {
+				System.out.println("Incorrect input: not an integer or valid dimension");
+				scanner.nextLine();
+			}
+
+		}
+		this.board = new char[dimensions][dimensions];
 	}
 
 	public void setPlayerNames() {
@@ -76,10 +92,10 @@ public class ConnectFour {
 
 	public int inputValidColumn() {
 		int col = 0;
-		int columns = getNumCols();
-		while ((col < 1) || (col > 8) || (board[col - 1][7] != '\0')) {
+		int dimensions = getNumCols();
+		while ((col < 1) || (col > dimensions) || (board[col - 1][dimensions-1] != '\0')) {
 			try {
-				System.out.println("Enter valid integer column between 1 and " + columns + " to place piece");
+				System.out.println("Enter valid integer column between 1 and " + dimensions + " to place piece");
 				col = scanner.nextInt();
 			} catch (Exception e) {
 				System.out.println("Incorrect input: not an integer or valid move");
