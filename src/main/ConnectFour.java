@@ -1,127 +1,62 @@
 package main;
 
-import java.util.Scanner;
-
 public class ConnectFour {
-	public char[][] board;
-	public Scanner scanner;
+	public Board boardObj;
 	public int currentTurnPlayer;
-	public String[] players;
-	public char[] playerPieces;
-	public boolean tie;
+	public Player[] players;
+	public Input inputObj;
+	public Display displayObj;
 
 	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		char[][] board = new char[8][8];
-		ConnectFour game = new ConnectFour(board, scanner);
+		ConnectFour game = new ConnectFour();
 		game.play();
 	}
 
-	public ConnectFour(char [][] board, Scanner scanner) {
-		this.board = board;
-		this.scanner = scanner;
+	public ConnectFour() {
 		this.currentTurnPlayer = 0;
-		this.players = new String[2];
-		this.playerPieces = new char[] { 'X', 'O' };
-		this.tie = false;
+		this.players = new Player[2];
+		this.inputObj = new Input();
 	}
 
 	public void play() {
-		setPlayerNames();
-		setBoardDimensions();
-		printGame();
-		while (true) {
-			int col = inputValidColumn();
-			addPieces(col);
+		setPlayerInformation();
+		int dimension = inputObj.getInputBoardDimension();
+		boardObj = new Board(dimension);
+		char[][] board = boardObj.getBoard();
+		displayObj = new Display();
+		displayObj.printGame(getCurrentPlayerName(), board);
+
+		while (!isGameEnd()) {
+			int col = inputObj.getInputValidColumn(dimension, board);
+			boardObj.addPieces(col, getCurrentPlayerPiece());
 			changeTurns();
-			printGame();
-			tie = gameTie();
-			if(gameWon() || tie) {
-				break;
-			}
+			displayObj.printGame(getCurrentPlayerName(), board);
 		}
-		printGameEndStatus();
+
+		displayGameEndStatus();
 	}
 
-	public int getNumRows() {
-		return board[0].length;
+	public void displayGameEndStatus() {
+		String winningPlayerName = players[1 - currentTurnPlayer].name;
+		displayObj.printGameEndStatus(boardObj.isTie(), winningPlayerName);
 	}
 
-	public int getNumCols() {
-		return board.length;
-	}
+	public void setPlayerInformation() {
+		char[] pieces = new char[] { 'X', 'O' };
 
-	public void setBoardDimensions() {
-		System.out.println("Enter dimensions for board");
-		int dimensions = 0;
-		while ((dimensions < 4) || (dimensions > 10)) {
-			try {
-				System.out.println("Enter valid integer column between 4 and 10 for board dimensions");
-				dimensions = scanner.nextInt();
-			} catch (Exception e) {
-				System.out.println("Incorrect input: not an integer or valid dimension");
-				scanner.nextLine();
-			}
-
-		}
-		this.board = new char[dimensions][dimensions];
-	}
-
-	public void setPlayerNames() {
-		for (int playerNumber = 0; playerNumber < 2; playerNumber++) {
-			System.out.println("Enter username for player " + (playerNumber + 1));
-			players[playerNumber] = inputValidPlayerName();
+		for (int playerNumber = 0; playerNumber < players.length; playerNumber++) {
+			String name = inputObj.getInputValidPlayerName(playerNumber);
+			char piece = pieces[playerNumber];
+			players[playerNumber] = new Player(name, piece);
 		}
 	}
 
-	public String inputValidPlayerName() {
-		String playerName = "";
-		while (playerName.trim().length() == 0) {
-			if (scanner.hasNextLine()) {
-				playerName = this.scanner.nextLine();
-			} else {
-				System.out.println("Please enter non empty string for player name");
-			}
-		}
-		return playerName;
-	}
-
-	public String[] getPlayerNames() {
-		return players;
-	}
-
-	public int inputValidColumn() {
-		int col = 0;
-		int dimensions = getNumCols();
-		while ((col < 1) || (col > dimensions) || (board[col - 1][dimensions-1] != '\0')) {
-			try {
-				System.out.println("Enter valid integer column between 1 and " + dimensions + " to place piece");
-				col = scanner.nextInt();
-			} catch (Exception e) {
-				System.out.println("Incorrect input: not an integer or valid move");
-				scanner.nextLine();
-			}
-
-		}
-		return col - 1;
-	}
-
-	public void addPieces(int col) {
-		int row = getEmptyRow(col);
-		board[col][row] = getCurrentPlayerPiece();
+	public String getCurrentPlayerName() {
+		return players[currentTurnPlayer].name;
 	}
 
 	public char getCurrentPlayerPiece() {
-		return playerPieces[currentTurnPlayer];
-	}
-
-	public int getEmptyRow(int col) {
-		char[] column = board[col];
-		int row = 0;
-		while (column[row] != '\0') {
-			row += 1;
-		}
-		return row;
+		return players[currentTurnPlayer].piece;
 	}
 
 	public void changeTurns() {
@@ -132,190 +67,7 @@ public class ConnectFour {
 		}
 	}
 
-	public boolean gameWon() { 		
-		if(isVerticalWin()) {
-			return true;
-		};
-		if(isHorizontalWin()) {
-			return true;
-		}
-		if(isDiagonalWin()) {
-			return true;
-		}
-	
-		return false;
+	public boolean isGameEnd() {
+		return boardObj.isVerticalWin() || boardObj.isHorizontalWin() || boardObj.isDiagonalWin() || boardObj.isTie();
 	}
-	
-	public boolean isVerticalWin() {
-		int rows = getNumRows();
-		int cols = getNumCols();
-		
-		for (int row=0; row<rows-3; row++) {
-			for(int col = 0; col < cols; col++) {
-				char piece = board[col][row];
-				
-				if (piece == '\0') {
-					continue;
-				}
-				
-				if (piece == board[col][row + 1] && piece == board[col][row + 2]
-						&& piece == board[col][row + 3]) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	public boolean isHorizontalWin() {
-		int rows = getNumRows();
-		int cols = getNumCols();
-
-		for(int col = 0; col < cols-3; col++) {
-			for (int row=0; row<rows; row++) {
-				char piece = board[col][row];
-				
-				if (piece == '\0') {
-					continue;
-				}
-				
-				if (piece == board[col + 1][row] && piece == board[col + 2][row]
-						&& piece == board[col + 3][row]) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	public boolean isDiagonalWin() {
-		if(checkBottomLeftTopRightDiagonal()) {
-			return true;
-		}
-		
-		if(checkTopLeftBottomRightDiagonal()) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public boolean checkBottomLeftTopRightDiagonal() {
-		int rows = getNumRows();
-		int cols = getNumCols();
-		
-		for(int col = 0; col < cols-3; col++) {
-			for (int row=0; row<rows-3; row++) {
-				char piece = board[col][row];
-				
-				if (piece == '\0') {
-					continue;
-				}
-				
-				if (piece == board[col + 1][row + 1] && piece == board[col + 2][row + 2]
-						&& piece == board[col + 3][row + 3]) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	public boolean checkTopLeftBottomRightDiagonal() {
-		int rows = getNumRows();
-		int cols = getNumCols();
-		
-		for(int col = cols - 1; col > 2; col--) {
-			for (int row=0; row<rows-3; row++) {
-				char piece = board[col][row];
-				
-				if (piece == '\0') {
-					continue;
-				}
-				
-				if (piece == board[col - 1][row + 1] && piece == board[col - 2][row + 2]
-						&& piece == board[col - 3][row + 3]) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	public boolean gameTie() {
-		int cols = getNumCols();
-		int rows = getNumRows() - 1;
-		for (int col = 0; col < cols; col++) {
-			if (board[col][rows] == '\0') {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public void printGame() {
-		System.out.println("Current Player: " + players[currentTurnPlayer]);
-		printBoard();
-	}
-
-	public void printBoard() {
-		String frontSpacing = "   ";
-
-		System.out.println();
-		printHorizontalLine(frontSpacing);
-		printRow(frontSpacing);
-		printColumnLabel();
-	}
-
-	public void printHorizontalLine(String frontSpacing) {
-		int rows = getNumRows();
-		String cellBorderTopOrBottom = "--";
-		String cellBorderTopOrBottomEdge = "-";
-
-		System.out.print(frontSpacing);
-		System.out.print(cellBorderTopOrBottomEdge);
-		for (int r = rows - 1; r >= 0; r--) {
-			System.out.print(cellBorderTopOrBottom);
-		}
-		System.out.println();
-	}
-
-	public void printRow(String frontSpacing) {
-		int rows = getNumRows();
-		int cols = getNumCols();
-		String spacingAfterLabel = "  ";
-		String cellBorderSide = "|";
-
-		for (int r = rows - 1; r >= 0; r--) {
-			System.out.print((r + 1) + spacingAfterLabel + cellBorderSide);
-			for (int c = 0; c < cols; c++) {
-				if (board[c][r] != '\0') {
-					System.out.print(board[c][r] + cellBorderSide);
-				} else {
-					System.out.print(' ' + cellBorderSide);
-				}
-			}
-			System.out.println();
-			printHorizontalLine(frontSpacing);
-		}
-	}
-
-	public void printColumnLabel() {
-		int cols = getNumCols();
-		String frontSpacing = "    ";
-		String spacingBetweenColumnLabels = " ";
-
-		System.out.print(frontSpacing);
-		for (int c = 1; c <= cols; c++) {
-			System.out.print(c + spacingBetweenColumnLabels);
-		}
-
-		System.out.println();
-	}
-
-	public void printGameEndStatus() {
-		if(tie) System.out.println("The game was a tie!");
-		else System.out.println("Congrats! " + (players[1-currentTurnPlayer]) + " won the game.");
-	}
-
 }
