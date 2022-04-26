@@ -1,4 +1,4 @@
 #!/bin/bash
 
-javac -d bin src/main/ConnectFour.java
+javac -d bin src/main/*.java
 java -cp bin main.ConnectFour
