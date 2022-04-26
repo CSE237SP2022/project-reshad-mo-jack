@@ -46,3 +46,24 @@ Some extreme edge cases might not behave properly. Col and row might be used int
 ## What commands are needed to compile and run your code from the command line (or better yet, provide a script that people can use to run your program!)
 
 Run the script './run.sh' from command line
+
+
+
+# Iteration 3
+
+
+## What user stories were completed this iteration?
+
+The game can be played at a board with dimensions 4-10, with two players smoothly.
+
+## What user stories do you intend to complete next iteration?
+
+Fixed bugs
+
+## Is there anything that you implemented but doesn't currently work?
+
+Std draw was attempted to replace the current text based output, but didn't get it work. It is not merged to the main branch to ensure the main still works.
+
+## What commands are needed to compile and run your code from the command line (or better yet, provide a script that people can use to run your program!)
+
+Run the script './run.sh' from command line
